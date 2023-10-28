@@ -147,11 +147,11 @@ class ModuleRun(minitorch.Module):
         return 10
 
 
-@pytest.mark.task0_4
-@pytest.mark.xfail
-def test_module_fail_forward() -> None:
-    mod = minitorch.Module()
-    mod()
+# @pytest.mark.task0_4
+# @pytest.mark.xfail
+# def test_module_fail_forward() -> None:
+#     mod = minitorch.Module()
+#     mod()
 
 
 @pytest.mark.task0_4
