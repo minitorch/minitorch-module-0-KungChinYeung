@@ -32,12 +32,29 @@ class Module:
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        def travel_root(root):
+            root.training = True
+            if root.get_modules() is None:
+                return
+            for child in root.get_modules().values():
+                travel_root(child)
+                
+        travel_root(self)        
+            
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        def travel_root(root):
+            root.training = False
+            if root.get_modules() is None:
+                return 
+            for child in root.get_modules().values():
+                travel_root(child)
+                
+        travel_root(self)         
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
@@ -47,13 +64,25 @@ class Module:
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # TODO: Implement for Task 0.4.       
+        parameter = []
+        for name, mod in self.get_modules().items():
+            for p in mod.named_parameters():
+                  parameter.append((name + '.' + p[0], p[1]))
+        for p in self.get_parameters().items():
+            parameter.append((p[0], p[1])) 
+        return parameter             
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
+        parameter = list(self.get_parameters().values())
+        for m in self.modules():
+            parameter.extend(m.parameters())  
+        return parameter    
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
@@ -115,7 +144,12 @@ class Module:
 
         main_str += ")"
         return main_str
-
+    
+    def get_modules(self):
+        return self._modules
+    
+    def get_parameters(self):
+        return self._parameters
 
 class Parameter:
     """
